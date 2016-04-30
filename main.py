@@ -12,9 +12,11 @@ __author__ = 'karidon'
 __email__ = 'Genek_x@mail.ru'
 __date__ = '2016-04-29'
 
-import urllib.request
+import requests
 from bs4 import BeautifulSoup
 from xlwt import Workbook, easyxf
+
+import proxy
 
 FOREIGN_URL = 'http://nnmclub.to/forum/tracker.php?f=218'
 OUR_URL = 'http://nnmclub.to/forum/tracker.php?f=270'
@@ -22,14 +24,14 @@ OUR_URL = 'http://nnmclub.to/forum/tracker.php?f=270'
 BASE_URL = 'http://nnmclub.to/forum/'
 
 
-def get_html(url):
+def get_html(url, proxies=None):
 	'''
 	Возращает содержимое сайта
 	:param str
-	:return: http.client.HTTPResponse
+	:return:
 	'''
-	response = urllib.request.urlopen(url)
-	return response.read()
+	response = requests.get(url, proxies)
+	return response.content
 
 
 def parse_img(html):
@@ -120,7 +122,7 @@ def save_html(category, projects, path, mode='w'):
                 <title>New Films</title>
             </head>
         <body>
-            <h1 align='center'>{name}</h1>
+            <h1 name={name} align='center'>{name}</h1>
             <table border='1' align='center'>
             <tr>
                 <th>№</td>
@@ -161,21 +163,24 @@ def save_html(category, projects, path, mode='w'):
 
 
 def main():
-	foreign_films = 'Зарубежные фильмы'
-	topic_count = parse(get_html(FOREIGN_URL))
+	value_proxy = proxy.get_proxy(proxy.parse(proxy.get_html(proxy.BASE_URL)))
+	print(value_proxy)
+
+	topic_count = parse(get_html(FOREIGN_URL, proxies={'http': value_proxy}))
 	print('Результатов поиска: %d (max: 50)' % len(topic_count))
 
+	foreign_films = 'Зарубежные фильмы'
 	save_html(foreign_films, topic_count, 'project.html')
 
-	our_films = 'Наши фильмы'
-	topic_count = parse(get_html(OUR_URL))
+	value_proxy = proxy.get_proxy(proxy.parse(proxy.get_html(proxy.BASE_URL)))
+	print(value_proxy)
+
+	topic_count = parse(get_html(OUR_URL, proxies={'http': value_proxy}))
 	print('Результатов поиска: %d (max: 50)' % len(topic_count))
 
+	our_films = 'Наши фильмы'
 	save_html(our_films, topic_count, 'project.html', mode='a')  # до писали фаил
 
 
 if __name__ == '__main__':
-	try:
-		main()
-	except urllib.error.URLError:
-		print('Sorry 502')
+	main()

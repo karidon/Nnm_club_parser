@@ -5,11 +5,13 @@ __author__ = 'karidon'
 __email__ = 'Genek_x@mail.ru'
 __date__ = '2016-04-30'
 
-import requests
+# TODO 1 : сделать все в OOP
 
+import requests
 from bs4 import BeautifulSoup
 
 BASE_URL = 'http://www.ip-adress.com/proxy_list/'
+
 
 def get_html(url):
 	'''
@@ -19,6 +21,7 @@ def get_html(url):
 	'''
 	r = requests.get(BASE_URL)
 	return r.content
+
 
 def parse(html):
 	'''
@@ -39,23 +42,25 @@ def parse(html):
 
 	return proxy_list
 
+
 def get_proxy(proxy_list):
 	'''
 	Проверяет proxy
 	:param proxy_list: list
 	:return: url
 	'''
-	for proxy in proxy_list:
-		url = 'http://' + proxy
+	for proxy_var in proxy_list:
+		url = 'http://' + proxy_var
 		try:
-			r = requests.get('https://www.ya.ru/', proxies={'http': url})
+			r = requests.get('http://www.prikol.ru/', proxies={'http': url})
 			if r.status_code == 200:
 				return url
 		except requests.exceptions.ConnectionError:
 			continue
 
+
 if __name__ == '__main__':
 	proxy = get_proxy(parse(get_html(BASE_URL)))
 	print(proxy)
-	r = requests.get('http://speed-tester.info/check_ip.php', proxies={'http': proxy})
-	print(r.content)
+	r = requests.get('http://speed-tester.info/check_ip.php', proxies={'http': proxy}).content
+	print(r)
