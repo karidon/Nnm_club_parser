@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 __author__ = 'karidon'
 __email__ = 'Genek_x@mail.ru'
-__date__ = '2016-03-27'
+__date__ = '2016-04-30'
 
 import requests
 
@@ -12,10 +12,20 @@ from bs4 import BeautifulSoup
 BASE_URL = 'http://www.ip-adress.com/proxy_list/'
 
 def get_html(url):
+	'''
+	Возвращает html страницу
+	:param url: str url
+	:return:
+	'''
 	r = requests.get(BASE_URL)
 	return r.content
 
 def parse(html):
+	'''
+	Возвращает список ip proxy
+	:param html: str
+	:return: list
+	'''
 	soup = BeautifulSoup(html, 'html.parser')
 	table = soup.find('table', class_='proxylist')
 
@@ -30,6 +40,11 @@ def parse(html):
 	return proxy_list
 
 def get_proxy(proxy_list):
+	'''
+	Проверяет proxy
+	:param proxy_list: list
+	:return: url
+	'''
 	for proxy in proxy_list:
 		url = 'http://' + proxy
 		try:
