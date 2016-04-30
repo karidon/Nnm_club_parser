@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+"""
+Скрипт разбирает сайт Nnm-club выбмрая 50 зарубежные и наши фильмы.
+Выводит в html и excel фаил.
+"""
+# TODO 1: Переделать по возможность в ООП
+# TODO 2: Сделать status bar
+
 __author__ = 'karidon'
 __email__ = 'Genek_x@mail.ru'
 __date__ = '2016-04-29'
@@ -168,4 +175,7 @@ def main():
 
 
 if __name__ == '__main__':
-	main()
+	try:
+		main()
+	except urllib.error.URLError:
+		print('Sorry 502')
