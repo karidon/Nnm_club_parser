@@ -8,6 +8,8 @@ from __future__ import unicode_literals
 # TODO 1: Переделать по возможность в ООП
 # TODO 2: Сделать status bar
 
+
+
 __author__ = 'karidon'
 __email__ = 'Genek_x@mail.ru'
 __date__ = '2016-04-29'
