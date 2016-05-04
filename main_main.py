@@ -9,6 +9,8 @@ import main_new
 
 import proxy
 
+	# TODO 3: Test
+
 
 def main(url, mode='w'):
 	data = main_new.load_user_data(main_new.s, url)
