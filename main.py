@@ -8,6 +8,7 @@ __date__ = '2016-05-10'
 import parser_script
 import template
 
+
 def main(url, mode='w'):
 	'''
 	Return html file
