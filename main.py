@@ -6,7 +6,7 @@ __email__ = 'Genek_x@mail.ru'
 __date__ = '2016-05-10'
 
 import parser_script
-
+import template
 
 def main(url, mode='w'):
 	'''
@@ -22,7 +22,7 @@ def main(url, mode='w'):
 
 	text_list = parser_script.parse_user_datafile_bs('test.html')
 
-	parser_script.save_html(text_list, 'index.html', mode)
+	template.save_html(text_list, 'index.html', mode)
 	print('Результатов поиска: %d (max: 50)' % len(text_list))
 
 
