@@ -5,7 +5,6 @@ __author__ = 'karidon'
 __email__ = 'Genek_x@mail.ru'
 __date__ = '2016-05-10'
 
-import parser_script
 
 def save_html(projects, path, mode='w'):
 	'''
@@ -38,13 +37,13 @@ def save_html(projects, path, mode='w'):
 			</tr>
 	"""
 	html_template_table = """
-	<tr>
-		<td align='center'>{number}</td>
-		<td align='center'><a href={link}>{topic}</a></td>
-		<td align='center'>{size}</td>
-		<td align='center'>{seeders}</td>
-		<td align='center'><img src={img} width="189" height="255"></td>
-	</tr>
+			<tr>
+				<td align='center'>{number}</td>
+				<td align='center'><a href={link}>{topic}</a></td>
+				<td align='center'>{size}</td>
+				<td align='center'>{seeders}</td>
+				<td align='center'><img src={img} width="189" height="255"></td>
+			</tr>
 	"""
 
 	html_template_footer = """
@@ -66,13 +65,20 @@ def save_html(projects, path, mode='w'):
 
 
 if __name__ == '__main__':
-	foreign_films = 'http://nnmclub.to/forum/tracker.php?f=218'
-
-	projects = [{'category': 'Зарубежный фильм', 'topic': 'Детпул', 'link': 'https://yandex.ru/', 'size': '2.34 GB', 'seeders': '2345',
-	             'img':'http://assets.nnm-club.ws/forum/image.php?link=http://s017.radikal.ru/i420/1601/56/affa088a60aa.jpg'},
-	            {'category': 'Зарубежный фильм', 'topic': 'Детпул', 'link': 'https://yandex.ru/', 'size': '2.34 GB', 'seeders': '2345',
+	projects = [{'category': 'Зарубежный фильм', 'topic': 'Детпул', 'link': 'https://yandex.ru/', 'size': '2.34 GB',
+	             'seeders': '2345',
+	             'img': 'http://assets.nnm-club.ws/forum/image.php?link=http://s017.radikal.ru/i420/1601/56/affa088a60aa.jpg'},
+	            {'category': 'Зарубежный фильм', 'topic': 'Детпул', 'link': 'https://yandex.ru/', 'size': '2.34 GB',
+	             'seeders': '2345',
 	             'img': 'http://assets.nnm-club.ws/forum/image.php?link=http://s017.radikal.ru/i420/1601/56/affa088a60aa.jpg'}
 	            ]
 	save_html(projects, 'test.html')
-	save_html(projects, 'test.html', 'a')
 
+	projects = [{'category': 'Наши фильмы', 'topic': 'Детпул', 'link': 'https://yandex.ru/', 'size': '2.34 GB',
+	             'seeders': '2345',
+	             'img': 'http://assets.nnm-club.ws/forum/image.php?link=http://s017.radikal.ru/i420/1601/56/affa088a60aa.jpg'},
+	            {'category': 'Наши фильмыы', 'topic': 'Детпул', 'link': 'https://yandex.ru/', 'size': '2.34 GB',
+	             'seeders': '2345',
+	             'img': 'http://assets.nnm-club.ws/forum/image.php?link=http://s017.radikal.ru/i420/1601/56/affa088a60aa.jpg'}
+	            ]
+	save_html(projects, 'test.html', 'a')
