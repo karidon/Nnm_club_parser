@@ -3,10 +3,12 @@ from __future__ import unicode_literals
 
 __author__ = 'karidon'
 __email__ = 'Genek_x@mail.ru'
-__date__ = '2016-04-30'
+__date__ = '2016-05-10'
 
 import requests
+
 from bs4 import BeautifulSoup
+from time import process_time, sleep
 
 s = requests.Session()
 
@@ -19,7 +21,6 @@ def load_user_data(session, url):
 	:param session: текущая сессия
 	:return: str
 	'''
-	#	url = 'http://nnmclub.to/forum/tracker.php?f=218'
 	request = session.get(url)
 	return request.text
 
@@ -36,10 +37,17 @@ def contain_movies_data(text):
 
 
 def contain_img_data(text):
+	'''
+	Parsing html file and return url img
+	:param text:
+	:return: str
+	'''
 	soup = BeautifulSoup(text, 'html.parser')
 	img = soup.find('var', {'class': 'postImg postImgAligned img-right'})
-
-	return img['title']
+	try:
+		return img['title']
+	except TypeError:
+		pass
 
 
 def read_file(filename):
@@ -54,6 +62,13 @@ def read_file(filename):
 
 
 def parse_user_datafile_bs(filename):
+	'''
+	Возвращает парсер файла в виде листа
+	:param filename: str
+	:return: list
+	'''
+	start = process_time()  # начальное время работы функции
+
 	result = []
 	text = read_file(filename)
 
@@ -61,7 +76,6 @@ def parse_user_datafile_bs(filename):
 	film_list = soup.find('table', {'class': 'forumline tablesorter'})
 
 	items = film_list.find_all('tr', ['prow1', 'prow2'])
-	# print(len(items), items)
 
 	for item in items:
 		# название фильма
@@ -70,18 +84,24 @@ def parse_user_datafile_bs(filename):
 		link = BASE_URL + item.find('td', {'class': 'genmed'}).find('a').get('href')
 		# размер
 		size = ' '.join(item.find('td', {'class': 'gensmall'}).text.split()[1:])
-		# скаяано
+		# скачано
 		seeders = item.find('td', {'class': 'seedmed'}).text
 		# обложка
 		img = contain_img_data(load_user_data(s,
-											  BASE_URL + item.find('td', {'class': 'genmed'}).find('a').get('href')))
+		                                      BASE_URL + item.find('td', {'class': 'genmed'}).find('a').get('href')))
 
 		result.append({'topic': topic,
-					   'link': link,
-					   'size': size,
-					   'seeders': seeders,
-					   'img': img
-					   })
+		               'link': link,
+		               'size': size,
+		               'seeders': seeders,
+		               'img': img
+		               })
+
+		sleep(2.0)  # задержка на 1 сек
+
+		# Проверка по времени
+		finish = process_time()
+		print(finish - start)
 
 	return result
 
@@ -95,49 +115,51 @@ def save_html(projects, path, mode='w', category=None):
 	:mode: str (режим записи)
 	:return: file
 	'''
+
+	# TODO: надо перенисти шаблон в отдельный файл
+
 	html_template_head = """
-        <!DOCTYPE HTML>
-        <html>
-            <head>
-                <meta charset="utf-8">
-                <title>New Films</title>
-            </head>
-        <body>
-            <h1 name={name} align='center'>{name}</h1>
-            <table border='1' align='center'>
-            <tr>
-                <th>№</td>
-                <th>Название</td>
-                <th>Размер</td>
-                <th>Раздатчики</td>
-                <th>Обложка</td>
-            </tr>
-    """
+		<!DOCTYPE HTML>
+		<html>
+			<head>
+				<meta charset="utf-8">
+				<title>New Films</title>
+			</head>
+		<body>
+			<h1 name={name} align='center'>{name}</h1>
+			<table border='1' align='center'>
+			<tr>
+				<th>№</td>
+				<th>Название</td>
+				<th>Размер</td>
+				<th>Раздатчики</td>
+				<th>Обложка</td>
+			</tr>
+	"""
 
 	html_template_table = """
-    <tr>
-        <td align='center'>{number}</td>
-        <td align='center'><a href={link}>{topic}</a></td>
-        <td align='center'>{size}</td>
-        <td align='center'>{seeders}</td>
-        <td align='center'><img src={img} width="189" height="255"></td>
-    </tr>
-    """
+	<tr>
+		<td align='center'>{number}</td>
+		<td align='center'><a href={link}>{topic}</a></td>
+		<td align='center'>{size}</td>
+		<td align='center'>{seeders}</td>
+		<td align='center'><img src={img} width="189" height="255"></td>
+	</tr>
+	"""
 
 	html_template_footer = """
-            </table>
-        </body>
-        </html>
-    """
-	# with open(path, 'w', encoding='utf-8') as my_file:
+			</table>
+		</body>
+		</html>
+	"""
 	my_file = open(path, mode, encoding='utf-8')
 
 	my_file.write(html_template_head.format(name=category))
 
 	for num, project in enumerate(projects, 1):
 		my_file.write(html_template_table.format(number=num, topic=project['topic'], link=project['link'],
-												 size=project['size'], seeders=project['seeders'],
-												 img=project['img']))
+		                                         size=project['size'], seeders=project['seeders'],
+		                                         img=project['img']))
 	my_file.write(html_template_footer)
 
 	my_file.close()
@@ -153,4 +175,4 @@ if __name__ == '__main__':
 	text_list = parse_user_datafile_bs('test.html')
 	save_html(text_list, 'index.html')
 
-	# contain_img_data(load_user_data(s, 'http://nnmclub.to/forum/viewtopic.php?t=1012261'))
+# contain_img_data(load_user_data(s, 'http://nnmclub.to/forum/viewtopic.php?t=1012261'))
