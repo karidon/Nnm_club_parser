@@ -18,7 +18,7 @@ def main(url, mode='w'):
 	'''
 	data = parser_script.load_user_data(parser_script.s, url)
 	if parser_script.contain_movies_data(data):
-		with open('test.html', 'w') as output_file:
+		with open('tmp.html', 'w') as output_file:
 			output_file.write(data)
 
 	text_list = parser_script.parse_user_datafile_bs('test.html')
