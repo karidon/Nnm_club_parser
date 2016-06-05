@@ -21,7 +21,7 @@ def main(url, mode='w'):
 		with open('tmp.html', 'w') as output_file:
 			output_file.write(data)
 
-	text_list = parser_script.parse_user_datafile_bs('test.html')
+	text_list = parser_script.parse_user_datafile_bs('tmp.html')
 
 	template.save_html(text_list, 'index.html', mode)
 	print('Результатов поиска: %d (max: 50)' % len(text_list))
